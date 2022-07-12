@@ -76,9 +76,6 @@ class ADS131M0x:
 
     def configureChannel(self, mux, filter, phase_delay, channel):
         REG_BYTE = 0x0
-        delay = phase_delay
-        dc_filter_block = filter
-        mode = mux
         if channel == 0:
             REG_BYTE = CH0_CFG
         elif channel == 1:
@@ -87,10 +84,20 @@ class ADS131M0x:
             REG_BYTE = CH2_CFG
         elif channel == 3:
             REG_BYTE = CH3_CFG
-        parse_list = [[0x3, 3], [REG_BYTE, 6], [0x0, 7], [delay, 10], [0x0, 3], [dc_filter_block, 1], [mode, 2], [0x0, self.frame_size]]
+        parse_list = [[0x3, 3], [REG_BYTE, 6], [0x0, 7], [phase_delay, 10], [0x0, 3], [filter, 1], [mux, 2], [0x0, self.frame_size]]
         out_list = GenerateSPIFrame(parse_list, 2)
         return sendSPI(out_list)
 
+    def configureGainCalibration(self, channel, gcal_val):
+        REG_BYTE = 0x0
+        if channel == 0:
+            REG_BYTE = CH0_CFG
+        elif channel == 1:
+            REG_BYTE = CH1_CFG
+        elif channel == 2:
+            REG_BYTE = CH2_CFG
+        elif channel == 3:
+            REG_BYTE = CH3_CFG
 
 
 
